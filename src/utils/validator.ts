@@ -15,6 +15,9 @@ export function validateNumber(input: string): number {
   if (!isFinite(num)) {
     throw new ValidationError(`Number out of range: ${input}`);
   }
+  if (Math.abs(num) > 1e12) {
+    throw new ValidationError(`Number exceeds safe range: ${input}`);
+  }
   return num;
 }
 

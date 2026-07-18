@@ -4,7 +4,9 @@ import { aggregateResults, evaluateExpression, batchEvaluate } from "./comprehen
 
 export function computeMean(values: number[]): number {
   const arr = validateArray(values);
-  return arr.reduce((s, v) => s + v, 0) / arr.length;
+  const sum = arr.reduce((s, v) => s + v, 0);
+  const mean = sum / arr.length;
+  return Math.round(mean * 1e6) / 1e6;
 }
 
 export function computeMedian(values: number[]): number {

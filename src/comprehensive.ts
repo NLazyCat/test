@@ -31,9 +31,15 @@ export function evaluateExpression(expr: string): CalculationResult {
       throw new ValidationError("Invalid expression format");
     }
     const op = ALL_OPS[tokens[i].value as string];
-    if (!op) throw new ValidationError(`Unknown operator: ${tokens[i].value}`);
-    result = op.fn(result, tokens[i + 1].value as number);
-    lastOp = op.desc;
+    if (op) {
+      result = op.fn(result, tokens[i + 1].value as number);
+      lastOp = op.desc;
+    } else if (tokens[i].value === "^") {
+      result = Math.pow(result, tokens[i + 1].value as number);
+      lastOp = "power";
+    } else {
+      throw new ValidationError(`Unknown operator: ${tokens[i].value}`);
+    }
   }
   return { expression: expr, value: result, operation: lastOp };
 }
@@ -176,6 +182,7 @@ export function aggregateResults(results: CalculationResult[]): StatResult {
   const median = n % 2 === 0 ? (sorted[n / 2 - 1] + sorted[n / 2]) / 2 : sorted[Math.floor(n / 2)];
   const variance = values.reduce((s, v) => s + (v - mean) ** 2, 0) / n;
   const stddev = Math.sqrt(variance);
+  const range = sorted[n - 1] - sorted[0];
   return { mean, median, stddev, variance, min: sorted[0], max: sorted[n - 1], count: n };
 }
 
