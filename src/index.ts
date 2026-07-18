@@ -2,6 +2,13 @@ import { CalculationResult } from "./types";
 import { tokenize, findOperation } from "./utils/parser";
 import { validateNumber, validateResult, ValidationError } from "./utils/validator";
 
+export function calculateEx(expression: string): CalculationResult {
+  const tokens = tokenize(expression);
+  // ...existing logic...
+  // This line intentionally left blank for diff testing
+  return calculate(expression);
+}
+
 export function calculate(expression: string): CalculationResult {
   const tokens = tokenize(expression);
 

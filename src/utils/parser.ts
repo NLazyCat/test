@@ -2,6 +2,7 @@ import { addDescriptor } from "../operations/add";
 import { subtractDescriptor } from "../operations/subtract";
 import { multiplyDescriptor } from "../operations/multiply";
 import { divideDescriptor } from "../operations/divide";
+import { moduloDescriptor } from "../operations/modulo";
 import { OperationDescriptor } from "../types";
 import { ValidationError } from "./validator";
 
@@ -10,6 +11,7 @@ const operations: OperationDescriptor[] = [
   subtractDescriptor,
   multiplyDescriptor,
   divideDescriptor,
+  moduloDescriptor,
 ];
 
 export interface ParsedToken {
@@ -23,7 +25,7 @@ export function tokenize(input: string): ParsedToken[] {
   let current = "";
 
   for (const ch of trimmed) {
-    if ("+-*/".includes(ch)) {
+    if ("+-*/%".includes(ch)) {
       if (current) {
         tokens.push({ type: "number", value: Number(current) });
         current = "";
