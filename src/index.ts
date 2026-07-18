@@ -1,24 +1,55 @@
 import { CalculationResult } from "./types";
-import { tokenize, findOperation } from "./utils/parser";
+import { tokenize, findOperation, findFunction, ParsedToken } from "./utils/parser";
 import { validateNumber, validateResult, ValidationError } from "./utils/validator";
+
+// Evaluate a single function argument: direct number (incl. negatives) or a
+// sub-expression that is recursively calculated (e.g. "2 + 2" or "sqrt(16)").
+function evaluateArg(arg: string): number {
+  const trimmed = arg.trim();
+  if (trimmed === "") {
+    throw new ValidationError("Empty function argument");
+  }
+  if (/^-?\d*\.?\d+$/.test(trimmed)) {
+    return validateNumber(trimmed);
+  }
+  return calculate(trimmed).value;
+}
+
+// Evaluate a parsed token into a numeric value.
+function evaluateToken(token: ParsedToken): number {
+  if (token.type === "number") {
+    return validateNumber(String(token.value));
+  }
+  if (token.type === "function") {
+    const fn = findFunction(String(token.value));
+    const argValues = (token.args || []).map(evaluateArg);
+    return fn.fn(...argValues);
+  }
+  throw new ValidationError("Malformed expression");
+}
 
 export function calculate(expression: string): CalculationResult {
   const tokens = tokenize(expression);
 
-  // Simple left-to-right evaluation (no parentheses for simplicity)
-  let result = validateNumber(String(tokens[0].value));
-  let lastOp = "start";
+  // Simple left-to-right evaluation (no parentheses for binary ops)
+  let result = evaluateToken(tokens[0]);
+  let lastOp =
+    tokens[0].type === "function" ? String(tokens[0].value) : "start";
 
   for (let i = 1; i < tokens.length; i += 2) {
     const opToken = tokens[i];
-    const numToken = tokens[i + 1];
+    const operandToken = tokens[i + 1];
 
-    if (!numToken || opToken.type !== "operator" || numToken.type !== "number") {
+    if (
+      !operandToken ||
+      opToken.type !== "operator" ||
+      (operandToken.type !== "number" && operandToken.type !== "function")
+    ) {
       throw new ValidationError("Malformed expression");
     }
 
     const op = findOperation(String(opToken.value));
-    const num = validateNumber(String(numToken.value));
+    const num = evaluateToken(operandToken);
     result = op.fn(result, num);
     lastOp = op.name;
   }
