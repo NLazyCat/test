@@ -1,9 +1,9 @@
-import { addDescriptor } from "../operations/add.js";
-import { subtractDescriptor } from "../operations/subtract.js";
-import { multiplyDescriptor } from "../operations/multiply.js";
-import { divideDescriptor } from "../operations/divide.js";
-import { OperationDescriptor } from "../types.js";
-import { ValidationError } from "./validator.js";
+import { addDescriptor } from "../operations/add";
+import { subtractDescriptor } from "../operations/subtract";
+import { multiplyDescriptor } from "../operations/multiply";
+import { divideDescriptor } from "../operations/divide";
+import { OperationDescriptor } from "../types";
+import { ValidationError } from "./validator";
 
 const operations: OperationDescriptor[] = [
   addDescriptor,

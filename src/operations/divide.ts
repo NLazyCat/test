@@ -1,5 +1,5 @@
-import { BinaryOperation, OperationDescriptor } from "../types.js";
-import { ValidationError } from "../utils/validator.js";
+import { BinaryOperation, OperationDescriptor } from "../types";
+import { ValidationError } from "../utils/validator";
 
 export const divide: BinaryOperation = (a, b) => {
   if (b === 0) {

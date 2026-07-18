@@ -1,4 +1,4 @@
-import { CalculationResult } from "../types.js";
+import { CalculationResult } from "../types";
 
 export class ValidationError extends Error {
   constructor(message: string) {

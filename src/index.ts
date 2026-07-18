@@ -1,6 +1,6 @@
-import { CalculationResult } from "./types.js";
-import { tokenize, findOperation } from "./utils/parser.js";
-import { validateNumber, validateResult, ValidationError } from "./utils/validator.js";
+import { CalculationResult } from "./types";
+import { tokenize, findOperation } from "./utils/parser";
+import { validateNumber, validateResult, ValidationError } from "./utils/validator";
 
 export function calculate(expression: string): CalculationResult {
   const tokens = tokenize(expression);

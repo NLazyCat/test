@@ -1,4 +1,4 @@
-import { BinaryOperation, OperationDescriptor } from "../types.js";
+import { BinaryOperation, OperationDescriptor } from "../types";
 
 export const subtract: BinaryOperation = (a, b) => a - b;
 
