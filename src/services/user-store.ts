@@ -57,10 +57,10 @@ export async function verifyPassword(email: string, password: string): Promise<U
   return null;
 }
 
-export function updateUser(id: string, updates: Partial<User>): User | undefined {
+export function updateUser(id: string, changes: Partial<User>): User | undefined {
   const existing = users.get(id);
   if (!existing) return undefined;
-  const updated: StoredUser = { ...existing, ...updates, updatedAt: new Date() };
+  const updated: StoredUser = { ...existing, ...changes, updatedAt: new Date() };
   users.set(id, updated);
   return { ...updated, passwordHash: undefined } as unknown as User;
 }

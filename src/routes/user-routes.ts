@@ -17,7 +17,7 @@ router.post('/', async (req: Request, res: Response) => {
   const body: CreateUserRequest = req.body;
   const validation = validateCreateUserRequest(body);
   if (!validation.valid) {
-    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse('VALIDATION_ERROR', 'Invalid user data', validation.errors));
+    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse({ code: 'VALIDATION_ERROR', message: 'Invalid user data', details: validation.errors }));
     return;
   }
 
@@ -35,7 +35,7 @@ router.get('/', requireAuth, requireRole(UserRole.Admin), (_req: AuthenticatedRe
 router.get('/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const user = getUserById(req.params.id);
   if (!user) {
-    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse('NOT_FOUND', `User ${req.params.id} not found`));
+    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse({ code: 'NOT_FOUND', message: `User ${req.params.id} not found` }));
     return;
   }
   res.status(HTTP_STATUS.OK).json(createSuccessResponse(toUserResponse(user)));
@@ -46,7 +46,7 @@ router.put('/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
   const body: UpdateUserRequest = req.body;
   const validation = validateUpdateUserRequest(body);
   if (!validation.valid) {
-    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse('VALIDATION_ERROR', 'Invalid update data', validation.errors));
+    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse({ code: 'VALIDATION_ERROR', message: 'Invalid update data', details: validation.errors }));
     return;
   }
 
@@ -56,7 +56,7 @@ router.put('/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
     role: body.role,
   });
   if (!user) {
-    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse('NOT_FOUND', `User ${req.params.id} not found`));
+    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse({ code: 'NOT_FOUND', message: `User ${req.params.id} not found` }));
     return;
   }
   res.status(HTTP_STATUS.OK).json(createSuccessResponse(toUserResponse(user)));
@@ -66,7 +66,7 @@ router.put('/:id', requireAuth, (req: AuthenticatedRequest, res: Response) => {
 router.delete('/:id', requireAuth, requireRole(UserRole.Admin), (req: AuthenticatedRequest, res: Response) => {
   const deleted = deleteUser(req.params.id);
   if (!deleted) {
-    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse('NOT_FOUND', `User ${req.params.id} not found`));
+    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse({ code: 'NOT_FOUND', message: `User ${req.params.id} not found` }));
     return;
   }
   res.status(HTTP_STATUS.NO_CONTENT).send();

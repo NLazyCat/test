@@ -24,7 +24,7 @@ router.get('/', (req: AuthenticatedRequest, res: Response) => {
 
   const validation = validateTaskFilter(filter);
   if (!validation.valid) {
-    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse('VALIDATION_ERROR', 'Invalid filter parameters', validation.errors));
+    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse({ code: 'VALIDATION_ERROR', message: 'Invalid filter parameters', details: validation.errors }));
     return;
   }
 
@@ -33,7 +33,7 @@ router.get('/', (req: AuthenticatedRequest, res: Response) => {
     page: filter.page ?? 1,
     limit: filter.limit ?? 20,
     total: result.total,
-    totalPages: Math.ceil(result.total / (filter.limit ?? 20)),
+    pageCount: Math.ceil(result.total / (filter.limit ?? 20)),
   }));
 });
 
@@ -47,7 +47,7 @@ router.get('/summary', (_req: AuthenticatedRequest, res: Response) => {
 router.get('/:id', (req: AuthenticatedRequest, res: Response) => {
   const task = getTaskById(req.params.id);
   if (!task) {
-    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse('NOT_FOUND', `Task ${req.params.id} not found`));
+    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse({ code: 'NOT_FOUND', message: `Task ${req.params.id} not found` }));
     return;
   }
   res.status(HTTP_STATUS.OK).json(createSuccessResponse(task));
@@ -58,7 +58,7 @@ router.post('/', (req: AuthenticatedRequest, res: Response) => {
   const body: CreateTaskRequest = req.body;
   const validation = validateCreateTaskRequest(body);
   if (!validation.valid) {
-    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse('VALIDATION_ERROR', 'Invalid task data', validation.errors));
+    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse({ code: 'VALIDATION_ERROR', message: 'Invalid task data', details: validation.errors }));
     return;
   }
 
@@ -77,7 +77,7 @@ router.put('/:id', (req: AuthenticatedRequest, res: Response) => {
   const body: UpdateTaskRequest = req.body;
   const validation = validateUpdateTaskRequest(body);
   if (!validation.valid) {
-    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse('VALIDATION_ERROR', 'Invalid update data', validation.errors));
+    res.status(HTTP_STATUS.BAD_REQUEST).json(createErrorResponse({ code: 'VALIDATION_ERROR', message: 'Invalid update data', details: validation.errors }));
     return;
   }
 
@@ -92,7 +92,7 @@ router.put('/:id', (req: AuthenticatedRequest, res: Response) => {
   });
 
   if (!task) {
-    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse('NOT_FOUND', `Task ${req.params.id} not found`));
+    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse({ code: 'NOT_FOUND', message: `Task ${req.params.id} not found` }));
     return;
   }
   res.status(HTTP_STATUS.OK).json(createSuccessResponse(task));
@@ -102,7 +102,7 @@ router.put('/:id', (req: AuthenticatedRequest, res: Response) => {
 router.delete('/:id', (req: AuthenticatedRequest, res: Response) => {
   const deleted = deleteTask(req.params.id);
   if (!deleted) {
-    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse('NOT_FOUND', `Task ${req.params.id} not found`));
+    res.status(HTTP_STATUS.NOT_FOUND).json(createErrorResponse({ code: 'NOT_FOUND', message: `Task ${req.params.id} not found` }));
     return;
   }
   res.status(HTTP_STATUS.NO_CONTENT).send();

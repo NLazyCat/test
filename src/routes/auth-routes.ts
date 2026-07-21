@@ -12,7 +12,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
   if (!email || !password) {
     res.status(HTTP_STATUS.BAD_REQUEST).json(
-      createErrorResponse('VALIDATION_ERROR', 'Email and password are required'),
+      createErrorResponse({ code: 'VALIDATION_ERROR', message: 'Email and password are required' }),
     );
     return;
   }
@@ -20,7 +20,7 @@ router.post('/login', async (req: Request, res: Response) => {
   const result = await login(email, password);
   if (!result) {
     res.status(HTTP_STATUS.UNAUTHORIZED).json(
-      createErrorResponse('INVALID_CREDENTIALS', 'Invalid email or password'),
+      createErrorResponse({ code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' }),
     );
     return;
   }
