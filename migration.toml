@@ -1,0 +1,9 @@
+# Migration Assessor Configuration
+[project]
+source = "C:/Users/16017/Documents/AI/migration-assessor/ts-test-project"
+source_lang = "typescript"
+target_language = "rust"
+source_version = ""
+
+[skip]
+framework = true
